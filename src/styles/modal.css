@@ -1,0 +1,15 @@
+.modal-body{
+    direction: rtl;
+}
+.modal-header .btn-close{
+    margin: 0;
+}
+.modal-header{
+    direction: rtl;
+}
+.modal-footer{
+    justify-content: center !important;
+}
+.display{
+    display: none;
+}
