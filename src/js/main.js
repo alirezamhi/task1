@@ -6,17 +6,23 @@ import header from "./header"
 import modal from './modal';
 import myDataItem from './items';
 
-fetch('https://63e8d426b120461c6be64cdd.mockapi.io/timeline/items', {
-  method: 'GET',
-  headers: {'content-type':'application/json'},})
-  .then(res => res.json())
-.then(tasks => {
-    console.log("ali8esdafa",tasks);
-  // Do something with the list of tasks
-}).catch(error => {
-  // handle error
-  console.log("eroe",error);
-})
+
+
+function fechApi(pageNumber) {
+    const url = new URL('https://63e8d426b120461c6be64cdd.mockapi.io/timeline/items')
+    url.searchParams.append('completed', false)
+    url.searchParams.append('page', pageNumber); 
+    url.searchParams.append('limit', 5);
+    fetch(url, {
+    method: 'GET',
+    headers: {'content-type':'application/json'},})
+    .then(res => res.json())
+    .then(tasks => {
+       return tasks
+    }).catch(error => {
+        return error
+    })
+}
 
 
 export let itemInTimeLine = []
@@ -71,7 +77,10 @@ buttonPage1.addEventListener("click",()=>{
     tabletwo.forEach((node)=>{node.classList.add("display")})
     buttonPage3.classList.remove("active")
     tableThree.forEach((node)=>{node.classList.add("display")})
+    let data = fechApi(1)
+    
     myDataBaseButtonNumberForSearch=myDataItem.partOneItem
+
 })
 
 
@@ -82,6 +91,7 @@ buttonPage2.addEventListener("click",()=>{
     tabletwo.forEach((node)=>{node.classList.remove("display")})
     buttonPage3.classList.remove("active")
     tableThree.forEach((node)=>{node.classList.add("display")})
+    fechApi(2)
     myDataBaseButtonNumberForSearch=myDataItem.partTwoItem
 })
 
@@ -92,6 +102,7 @@ buttonPage3.addEventListener("click",()=>{
     tabletwo.forEach((node)=>{node.classList.add("display")})
     buttonPage3.classList.add("active")
     tableThree.forEach((node)=>{node.classList.remove("display")})
+    fechApi(3)
     myDataBaseButtonNumberForSearch=myDataItem.partThreeItem
 })
 

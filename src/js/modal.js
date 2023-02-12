@@ -3,6 +3,24 @@ import myDataItem from "./items"
 import mydataBaseButtonNumber from "./main"
 
 
+const url = new URL('https://63e8d426b120461c6be64cdd.mockapi.io/timeline/items')
+url.searchParams.append('completed', false)
+url.searchParams.append('page', 1); 
+url.searchParams.append('limit', 5);
+fetch(url, {
+  method: 'GET',
+  headers: {'content-type':'application/json'},})
+  .then(res => res.json())
+.then(tasks => {
+    console.log("ali8esdafa",tasks);
+  // Do something with the list of tasks
+}).catch(error => {
+  // handle error
+  console.log("eroe",error);
+})
+
+
+
 let modal = `
 <!-- Button trigger modal -->
 <div class="text-center m-4">
