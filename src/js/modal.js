@@ -1,9 +1,7 @@
 import "../styles/modal.css"
-// import search from "./search"
 import myDataItem from "./items"
 import mydataBaseButtonNumber from "./main"
-// console.log(myItems.allItems);
-// import button from "./addButton"
+
 
 let modal = `
 <!-- Button trigger modal -->
@@ -38,7 +36,7 @@ let modal = `
       <tbody>
         ${myDataItem.partOneItem.map(node=>{
           return(
-            `<tr class="tableone">
+            `<tr class="tableone" id="z${node.id}">
               <td>${node.id}</td>
               <td>${node.content}</td>
               <td>${node.start}:${node.end?node.end:"0000-00-00"}</td>
@@ -47,17 +45,18 @@ let modal = `
           )
         })}
         ${
-          myDataItem.mydataBaseButtonNumber?.map(node=>{
-            return(`<tr class="display tabletwo">
+          myDataItem.partTwoItem?.map(node=>{
+            return(`<tr class="display tabletwo" id="z${node.id}">
               <td>${node.id}</td>
               <td>${node.content}</td>
+              <td>${node.start}:${node.end?node.end:"0000-00-00"}</td>
               <td><button class="btn btn-success addButton" id="${node.id}">+</button></td>
             </tr>`)
         })
         }
         ${
           myDataItem.partThreeItem.map(node=>{
-            return(`<tr class="display tablethree">
+            return(`<tr class="display tablethree" id="z${node.id}">
               <td>${node.id}</td>
               <td>${node.content}</td>
               <td>${node.start}:${node.end?node.end:"0000-00-00"}</td>
@@ -85,13 +84,3 @@ let modalArea = document.createElement('div')
 modalArea.classList.add("modalArea")
 modalArea.innerHTML=modal
 export default modalArea
-        // ${myDataItem.partOneItem.map(node=>{
-        //   return`
-        //   <tr>
-        //     <td>${node.id}</td>
-        //     <td>${node.content}</td>
-        //     <td>${node.start}:${node.end?node.end:"0000-00-00"}</td>
-        //     <td><button class="btn btn-success addButton" id=${node.id}>+</button></td>
-        //   </tr>
-        //   `
-        // })}

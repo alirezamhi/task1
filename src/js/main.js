@@ -5,6 +5,23 @@ import createTimeLine from './createTimeLIne';
 import header from "./header"
 import modal from './modal';
 import myDataItem from './items';
+
+fetch('https://63e8bbc2b120461c6be4d94b.mockapi.io/task/one', {
+  method: 'GET',
+  headers: {'content-type':'application/json'},
+}).then(res => {
+  if (res.ok) {
+      return res.json();
+  }
+  // handle error
+}).then(tasks => {
+    console.log("ali8esdafa",tasks);
+  // Do something with the list of tasks
+}).catch(error => {
+  // handle error
+})
+
+
 export let itemInTimeLine = []
 const options = {
     editable: {
@@ -15,7 +32,7 @@ const options = {
         updateTime:true,
     }
 }
-export let mydataBaseButtonNumber = []
+export let myDataBaseButtonNumberForSearch = myDataItem.partOneItem
 let item = []
 let timeLineArea = document.createElement("div")
 timeLineArea.classList.add("timeLineArea")
@@ -25,83 +42,70 @@ app.appendChild(header)
 app.appendChild(modal)
 app.appendChild(timeLineArea)
 const currentTimeLine = timeLine.generateTimeLine(options)
-
+const tbody = document.querySelector("tbody")
+const trTag = tbody.querySelectorAll("tr")
 const inputSearch = document.querySelector("#inputSearch");
 inputSearch.addEventListener("keyup",()=>{
-    // const inputValueSearch = inputSearch.value.toUpperCase()
-    // // // const findNode = allItem.allItems.filter((node)=>node.content===inputSearch.value)
-    // // // console.log(allItem.changeItems(findNode));
-    // for (let i = 0; i < mydataBaseButtonNumber.length; i++) {
-    // let text = mydataBaseButtonNumber[i].content  
-    // if(text.toUpperCase().indexOf(inputValueSearch) == -1){
-    //     trTag[i].style.display=""
-    // }else{
-    //     trTag[i].style.display="none"
-    // }
-    // }
-    // mydataBaseButtonNumber=[{id:1,content:"alireza"}]
-})
+    const inputValueSearch = inputSearch.value.toUpperCase()
+    let node = myDataBaseButtonNumberForSearch.find(node=>node.content.toUpperCase()===inputValueSearch)
+    for (let i = 0; i < trTag.length; i++) {
+        if (node) {
+            trTag[i].style.display="none"
+            document.querySelector(`#z${node.id}`).style.display=""
+        }else{
+            trTag[i].style.display=""
+        }
+    }
+    myDataItem.partOneItem="alireza"
+ })
 
 let buttonPage1 = document.querySelector("#buttonPage1")
 let buttonPage2 = document.querySelector("#buttonPage2")
 let buttonPage3 = document.querySelector("#buttonPage3")
-let tableOne = document.querySelector(".tableone")
-let tabletwo = document.querySelector(".tabletwo")
-let tableThree = document.querySelector(".tablethree")
+let tableOne = document.querySelectorAll(".tableone")
+let tabletwo = document.querySelectorAll(".tabletwo")
+let tableThree = document.querySelectorAll(".tablethree")
 
 
 buttonPage1.addEventListener("click",()=>{
     buttonPage1.classList.add("active")
-    // tableOne.classList.remove("display")
+    tableOne.forEach((node)=>{node.classList.remove("display")})
     buttonPage2.classList.remove("active")
-    // tabletwo.classList.add("display")
+    tabletwo.forEach((node)=>{node.classList.add("display")})
     buttonPage3.classList.remove("active")
-    // tableThree.classList.add("display")
-    mydataBaseButtonNumber=myDataItem.partOneItem
+    tableThree.forEach((node)=>{node.classList.add("display")})
+    myDataBaseButtonNumberForSearch=myDataItem.partOneItem
 })
+
+
 buttonPage2.addEventListener("click",()=>{
     buttonPage1.classList.remove("active")
-    // tableOne.classList.add("display")
+    tableOne.forEach((node)=>{node.classList.add("display")})
     buttonPage2.classList.add("active")
-    // tabletwo.classList.remove("display")
+    tabletwo.forEach((node)=>{node.classList.remove("display")})
     buttonPage3.classList.remove("active")
-    // tableThree.classList.add("display")
-    mydataBaseButtonNumber=myDataItem.partTwoItem
-    console.log(mydataBaseButtonNumber);
+    tableThree.forEach((node)=>{node.classList.add("display")})
+    myDataBaseButtonNumberForSearch=myDataItem.partTwoItem
 })
 
 buttonPage3.addEventListener("click",()=>{
     buttonPage1.classList.remove("active")
-    // tableOne.classList.add("display")
+    tableOne.forEach((node)=>{node.classList.add("display")})
     buttonPage2.classList.remove("active")
-    // tabletwo.classList.add("display")
+    tabletwo.forEach((node)=>{node.classList.add("display")})
     buttonPage3.classList.add("active")
-    // tableThree.classList.remove("display")
-    mydataBaseButtonNumber=myDataItem.partThreeItem
+    tableThree.forEach((node)=>{node.classList.remove("display")})
+    myDataBaseButtonNumberForSearch=myDataItem.partThreeItem
 })
 
 
 
 const addButton = document.querySelectorAll(".addButton");
-// function findMyNodeInMyDataItem(myNodeData) {
-//     return myDataItem.myNodeData.find((node)=>node.id==addButton[i].id)
-// }
 for (let i = 0; i < addButton.length; i++) {
     addButton[i].addEventListener("click",()=>{
-        // let node = findMyNodeInMyDataItem(myDataItem.partOneItem)?findMyNodeInMyDataItem(myDataItem.partOneItem):findMyNodeInMyDataItem(myDataItem.partTwoItem)?findMyNodeInMyDataItem(myDataItem.partTwoItem):findMyNodeInMyDataItem(myDataItem.partThreeItem)&&findMyNodeInMyDataItem(myDataItem.partThreeItem)
-        let node
-        if(myDataItem.partOneItem.find((node)=>node.id==addButton[i].id)){
-            node = myDataItem.partOneItem.find((node)=>node.id==addButton[i].id)
-        }else if(myDataItem.partTwoItem.find((node)=>node.id==addButton[i].id)){
-            node =myDataItem.partTwoItem.find((node)=>node.id==addButton[i].id)
-        }else if(myDataItem.partThreeItem.find((node)=>node.id==addButton[i].id)){
-            node = myDataItem.partThreeItem.find((node)=>node.id==addButton[i].id)
-        }
-        console.log("node",node);
-        // itemInTimeLine.push(node)
-        // currentTimeLine.setItems([...itemInTimeLine])
-        // console.log(itemInTimeLine);
-        // addButton[i].style.display="none"
-
+        let node = myDataItem.allItem.find(node=>node.id==addButton[i].id)
+        itemInTimeLine.push(node)
+        currentTimeLine.setItems([...itemInTimeLine])
+        addButton[i].style.display="none"
     })
 }
