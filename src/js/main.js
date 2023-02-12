@@ -6,19 +6,16 @@ import header from "./header"
 import modal from './modal';
 import myDataItem from './items';
 
-fetch('https://63e8bbc2b120461c6be4d94b.mockapi.io/task/one', {
+fetch('https://63e8d426b120461c6be64cdd.mockapi.io/timeline/items', {
   method: 'GET',
-  headers: {'content-type':'application/json'},
-}).then(res => {
-  if (res.ok) {
-      return res.json();
-  }
-  // handle error
-}).then(tasks => {
+  headers: {'content-type':'application/json'},})
+  .then(res => res.json())
+.then(tasks => {
     console.log("ali8esdafa",tasks);
   // Do something with the list of tasks
 }).catch(error => {
   // handle error
+  console.log("eroe",error);
 })
 
 
