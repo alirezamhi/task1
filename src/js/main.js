@@ -5,7 +5,13 @@ import createTimeLine from './createTimeLIne';
 import header from "./header"
 import myDataItem from './items';
 import "../styles/modal.css"
+
+
+
+
 let app = document.querySelector("#app")
+
+
  let modalPartTwo = 
 `
     <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
@@ -15,10 +21,22 @@ let app = document.querySelector("#app")
           <h1 class="modal-title fs-5" id="exampleModalLabel">پخش فیلم</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="margin:auto;display: flex;align-items: center;flex-direction: column;">
+        <div class="btn-group" style="direction: ltr;margin-bottom:20px">
+            <button class="btn btn-info html5Button">html 5</button>
+            <button class="btn btn-danger jwpalyerButton">jwplayer</button>
+        </div>
+        <div class="showhtml5Area">
           <video controls width="463px">
             <source src="https://mediamarketstreamer.iriborg.ir/timeshift/588/2023-02-14/123148271.mp4" />
           </video>
+        </div>
+        <div class = "parentjwplayerArea">     
+            <div id="jwplayerArea" class="notDisplay"></div>
+        </div>
+        <div>
+        
+        </div>
         </div>
       </div>
      </div>
@@ -27,6 +45,30 @@ let app = document.querySelector("#app")
 let divshowmovie = document.createElement("div")
 divshowmovie.innerHTML=modalPartTwo
 app.appendChild(divshowmovie)
+let jwpalyerButton = document.querySelector(".jwpalyerButton")
+let html5Button = document.querySelector(".html5Button")
+let showhtml5Area = document.querySelector(".showhtml5Area")
+let jwplayerArea = document.querySelector("#jwplayerArea")
+let parentjwplayerArea = document.querySelector(".parentjwplayerArea")
+jwpalyerButton.addEventListener("click",()=>{
+    jwplayerArea.classList.remove("notDisplay")
+    parentjwplayerArea.classList.remove("notDisplay")
+    showhtml5Area.classList.add("notDisplay")
+    jwplayer("jwplayerArea").setup({ 
+        "playlist": [{
+            "file": "https://mediamarketstreamer.iriborg.ir/timeshift/588/2023-02-14/123148271.mp4"
+        }],
+        width: 463,
+        height: 320,
+        aspectratio: "12:12",
+        responsive: true
+    });
+})
+html5Button.addEventListener("click",()=>{
+    showhtml5Area.classList.remove("notDisplay")
+    parentjwplayerArea.classList.add("notDisplay")
+})
+
 
 export let itemInTimeLine = []
 const options = {
@@ -162,7 +204,9 @@ headers: {'content-type':'application/json'},})
                     </svg>`
                 playButton.classList.add("btn")
                 playButton.classList.add("btn-warning")
-                playButton.classList.add("buttonPlayer")    
+                playButton.classList.add("buttonPlayer")   
+                playButton.setAttribute("data-bs-toggle","modal")
+                playButton.setAttribute("data-bs-target","#exampleModal2") 
                 const tdButton = document.createElement("td")
                 const divButton = document.createElement("div")
                 divButton.classList.add("btn-group")
@@ -335,6 +379,8 @@ inputSearch.addEventListener("keypress",(e)=>{
                             playButton.classList.add("btn")
                             playButton.classList.add("btn-warning")
                             playButton.classList.add("buttonPlayer")
+                            playButton.setAttribute("data-bs-toggle","modal")
+                            playButton.setAttribute("data-bs-target","#exampleModal2")
                             const divButton = document.createElement("div")
                             divButton.classList.add("btn-group")
                             divButton.style.direction="ltr"
@@ -394,6 +440,8 @@ inputSearch.addEventListener("keypress",(e)=>{
                     playButton.classList.add("btn")
                     playButton.classList.add("btn-warning")
                     playButton.classList.add("buttonPlayer")
+                    playButton.setAttribute("data-bs-toggle","modal")
+                    playButton.setAttribute("data-bs-target","#exampleModal2")
                     const tdButton = document.createElement("td")
                     const divButton = document.createElement("div")
                     divButton.classList.add("btn-group")
