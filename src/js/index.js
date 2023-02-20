@@ -1,0 +1,12 @@
+import main from "./main";
+let myMain = new main()
+// myMain.creatModalProgram()
+// myMain.creatModalMovie()
+// myMain.createButtonShowModal()
+myMain.wacher()
+myMain.creatModalProgram()
+myMain.creatModalMovie()
+myMain.createButtonShowModal()
+myMain.addTableInModal()
+myMain.createTimeLineInApp()
+myMain.getDataFromApi()

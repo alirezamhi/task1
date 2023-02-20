@@ -1,8 +1,5 @@
-import { itemInTimeLine } from "./main";
 class table {
-  constructor(nodes){
-
-  }
+  alirezamhi
   static myTable() {
     return `<table class="table">
         <thead>
@@ -19,50 +16,60 @@ class table {
   </table>
     `;
   }
-  static createRow(node,eventListenerFunction) {
-    node.map((item) => {
-      let tbody = document.querySelector("tbody")
-      const trArea = document.createElement("tr");
-      tbody.innerHTML=""
+
+  static buttonAddTimelineHandler(e) {
+    let buttonTarget = e.target.id;
+    let buttonid = buttonTarget.slice(-1);
+    
+    // let currnetNodeClickButton = this.allItem.filter(
+    //   (node) => node.id == buttonid
+    // );
+    // let a = currnetNodeClickButton.shift();
+    // const { id, time, name } = a;
+    // let obj = {
+    //   id: id,
+    //   content: name,
+    //   start: time.start,
+    //   end: time?.end,
+    // };
+    // itemInTimeLine.push(obj);
+    // currentTimeLine.setItems(itemInTimeLine);
+    // let btnStyle = e.target;
+    // btnStyle.style.display = "none";
+  }
+
+
+
+  static rowTemplate(list) {
+    return list.map((item) => {
       const { name, id, time } = item;
-      const tdId = document.createElement("td");
-      tdId.innerHTML = id;
-      trArea.appendChild(tdId);
-      const tdName = document.createElement("td");
-      tdName.innerHTML = name;
-      trArea.appendChild(tdName);
-      const tdTime = document.createElement("td");
-      tdTime.innerHTML = `${time.start}:${time.end ? time.end : "0000-00-00"}`;
-      trArea.appendChild(tdTime);
-      let addButton = document.createElement("button");
-      addButton.classList.add("btn");
-      addButton.classList.add("btn-success");
-      addButton.classList.add("addButton");
-      addButton.id = `z${node.id}`;
-      addButton.innerHTML = "+";
-      let findButtonInTimeLine = itemInTimeLine.find((w) => w.id == node.id);
-      findButtonInTimeLine ? (addButton.style.display = "none") : "";
-      addButton.removeEventListener("click",eventListenerFunction)
-      addButton.addEventListener("click", eventListenerFunction);
-      const playButton = document.createElement("button");
-      playButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-      <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
-      </svg>`;
-      playButton.classList.add("btn");
-      playButton.classList.add("btn-warning");
-      playButton.classList.add("buttonPlayer");
-      playButton.setAttribute("data-bs-toggle", "modal");
-      playButton.setAttribute("data-bs-target", "#exampleModal2");
-      const tdButton = document.createElement("td");
-      const divButton = document.createElement("div");
-      divButton.classList.add("btn-group");
-      divButton.style.direction = "ltr";
-      divButton.appendChild(playButton);
-      divButton.appendChild(addButton);
-      tdButton.appendChild(divButton);
-      trArea.appendChild(tdButton);
-      console.log(trArea,"alirejdshfiu");
-      tbody.appendChild(trArea);
-      })}
+      return `<tr>
+                <td>${id}</td>
+                <td>${name}</td>
+                <td>${time.start}</td>
+                <td>
+                   <div>
+                        <button class="btn btn-success addButton" id="addButton${id}">+</button>
+                        <button class="btn btn-warning buttonPlayer" data-bs-toggle="modal" data-bs-target="#exampleModal2">+</button>
+                    </div>
+                </td>
+              </tr>`;
+    });
+  }
+  static createRow(list) {
+    let tbody = document.querySelector("tbody");
+    let tableTamplate = this.rowTemplate(list);
+    for (let i = 0; i < tableTamplate.length; i++) {
+      tbody.innerHTML+=tableTamplate[i]
+    };
+    const addButtons = document.querySelectorAll(".addButton");  
+    for (let i = 0; i < addButtons.length; i++) {
+      addButtons[i].removeEventListener("click", this.buttonAddTimelineHandler);
+      addButtons[i].addEventListener("click", this.buttonAddTimelineHandler);
+    }
+     
+  }
+  
+  
 }
 export default table;

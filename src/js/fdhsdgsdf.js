@@ -326,30 +326,30 @@ function buttonAddTimelineHandler(e) {
 //         tr.appendChild(tdButton);
 //         tbody.appendChild(tr);
 //       });
-//       function buttonAddTimelineHandler(e) {
-//         let buttonTarget = e.target.id;
-//         let buttonid = buttonTarget.slice(-1);
-//         let currnetNodeClickButton = $tasks.filter(
-//           (node) => node.id == buttonid
-//         );
-//         let a = currnetNodeClickButton.shift();
-//         const { id, time, name } = a;
-//         let obj = {
-//           id: id,
-//           content: name,
-//           start: time.start,
-//           end: time?.end,
-//         };
-//         itemInTimeLine.push(obj);
-//         currentTimeLine.setItems(itemInTimeLine);
-//         let btnStyle = e.target;
-//         btnStyle.style.display = "none";
-//       }
-//       // let $li = document.createElement("li")
-//       // $li.innerHTML=`<a class="page-link" href="#">&raquo;</a>`
-//       // $li.classList.add("page-item")
-//       // listButton.appendChild($li)
-//     })
+      // function buttonAddTimelineHandler(e) {
+      //   let buttonTarget = e.target.id;
+      //   let buttonid = buttonTarget.slice(-1);
+      //   let currnetNodeClickButton = $tasks.filter(
+      //     (node) => node.id == buttonid
+      //   );
+      //   let a = currnetNodeClickButton.shift();
+      //   const { id, time, name } = a;
+      //   let obj = {
+      //     id: id,
+      //     content: name,
+      //     start: time.start,
+      //     end: time?.end,
+      //   };
+      //   itemInTimeLine.push(obj);
+      //   currentTimeLine.setItems(itemInTimeLine);
+      //   let btnStyle = e.target;
+      //   btnStyle.style.display = "none";
+      // }
+      // let $li = document.createElement("li")
+      // $li.innerHTML=`<a class="page-link" href="#">&raquo;</a>`
+      // $li.classList.add("page-item")
+      // listButton.appendChild($li)
+    // })
 //     .catch((error) => {
 //       return error;
 //     });
