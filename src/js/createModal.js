@@ -1,3 +1,4 @@
+import table from "./table"
 class createModal {
   static myModal(modalId, header, footer = false) {
     return `<div class="modal fade" id="exampleModal${modalId}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -25,6 +26,14 @@ class createModal {
   </div>`;
   }
 
+  static createModalItemFirstTime(item){
+    let itemFiveFirst = item.slice(0,5)
+    let myFirstTable =  table.rowTemplate(itemFiveFirst)
+    for (let i = 0; i < myFirstTable.length; i++) {
+      document.querySelector('tbody').innerHTML+=myFirstTable[i]
+    }
+  }
+
   static buttonPagination(items){
     let listPagination = document.querySelector(".pagination")
     for (let i = 0; i < Math.ceil(items.length / 5); i++) {
@@ -34,6 +43,7 @@ class createModal {
       </li>`
       listPagination.innerHTML+=itemPagination
     }
+    this.createModalItemFirstTime(items)
   }
 }
 export default createModal;

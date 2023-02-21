@@ -9,8 +9,9 @@ class main {
   constructor() {
     this.app = document.querySelector("#app");
     this.itemInTimeLine = [];
-    // this.$a = this.buttonAddTimelineHandler.bind(this);
+    this.addEventHandler = this.buttonAddTimelineHandler.bind(this);
     // this.b=this.addEventListenerForMyAddButton.bind(this)
+    this.buttonCondition = false
   }
   wacher() {
     // console.log(typeof this.$buttonAddTimelineHandler);
@@ -24,6 +25,13 @@ class main {
       true
     );
     this.app.appendChild(divShowItemArea);
+  }
+
+  addEventListenerInItems(items,listener){
+    for (let i = 0; i < items.length; i++) {
+      items[i].removeEventListener("click",listener)
+      items[i].addEventListener("click",listener)
+    }
   }
 
   creatModalMovie() {
@@ -57,9 +65,7 @@ class main {
   }
 
   createTimeLineInApp() {
-    let item = [
-      {id: 1, content: 'item 1', start: "2023-2-19"}
-    ];
+    let item = [];
     const options = {
       editable: {
         add: true,
@@ -86,27 +92,37 @@ class main {
 
     let timeLineArea = document.createElement("div");
     let timeLine = new createTimeLine(item, timeLineArea, options);
-    let currentTimeLine = timeLine.generateTimeLine(options);
+    this.currentTimeLine = timeLine.generateTimeLine(options);
     this.app.appendChild(timeLineArea);
   }
 
-  buttonAddTimelineHandler(e) {
-    console.log("alireza");
-    // let buttonTarget = e.target.id;
-    // let buttonId = buttonTarget.substr(-1);
-    // let currnetNodeClickButton = data.find((node) => node.id == buttonId);
-    // const { id, time, name } = currnetNodeClickButton;
-    // let obj = {
-    //   id: id,
-    //   content: name,
-    //   start: time.start,
-    //   end: time?.end,
-    // };
-    // // itemInTimeLine.push(obj);
-    // // currentTimeLine.setItems(itemInTimeLine);
-    // let btnStyle = e.target;
-    // btnStyle.style.display = "none";
+
+  setClockTemplate(item){
+    let clock = new Date(item)
+    let h = clock.getHours()
+    let m = clock.getMinutes()
+    let s = clock.getSeconds()
+    return `${h}:${m}:${s}`
   }
+
+  buttonAddTimelineHandler(e) {
+    let buttonTarget = e.target.id;
+    let buttonId = buttonTarget.substr(-1);
+    let currnetNodeClickButton = this.data.find((node) => node.id == buttonId);
+    const { id, end ,start , name } = currnetNodeClickButton;
+    console.log(this.setClockTemplate(start));
+    let obj = {
+      id: id,
+      content: name,
+      start:this.setClockTemplate(start),
+      end:this.setClockTemplate(end),
+    };
+    this.itemInTimeLine.push(obj)
+    this.currentTimeLine.setItems(this.itemInTimeLine);
+    let btnStyle = e.target;
+    btnStyle.style.display = "none";
+  }
+
 
   paginationButtonHandler(e) {
     let self = this;
@@ -125,16 +141,19 @@ class main {
     })
       .then((res) => res.json())
       .then((data) => {
-        table.createRow(data);
-        // const addButtons = document.querySelectorAll(".addButton");
-        // for (let i = 0; i < addButtons.length; i++) {
-        //   addButtons[i].removeEventListener("click", this.buttonAddTimelineHandler);
-        //   addButtons[i].addEventListener("click", () => {
-        //     console.log(this.buttonAddTimelineHandler, ".kjgh");
-        //   });
-        // }
+        table.createRow(data,this.itemInTimeLine);
+        const addButtons = document.querySelectorAll(".addButton");
+        for (let i = 0; i < addButtons.length; i++) {
+          addButtons[i].addEventListener("click", this.buttonAddTimelineHandler.bind(self));
+        }
       });
   }
+
+
+  styleConditionMethod(item){
+    return this.itemInTimeLine.find(node=>node.id==item.id)
+  }
+
 
   getDataFromApi() {
     fetch("https://63e8d426b120461c6be64cdd.mockapi.io/timeline/items", {
@@ -142,19 +161,20 @@ class main {
       headers: { "content-type": "application/json" },
     })
       .then((res) => res.json())
-      .then((data) => {
-        createModal.buttonPagination(data);
+      .then(($data) => {
+        this.data=$data
+        createModal.buttonPagination($data);
         let paginationButton = document.querySelectorAll(".page-link");
-
         for (let i = 0; i < paginationButton.length; i++) {
-          paginationButton[i].removeEventListener(
-            "click",
-            this.paginationButtonHandler
-          );
           paginationButton[i].addEventListener(
             "click",
-            this.paginationButtonHandler
+            this.paginationButtonHandler.bind(this)
           );
+        }
+        let firstAddButton = document.querySelectorAll(".addButton")
+        for (let i = 0; i < firstAddButton.length; i++) {
+          firstAddButton[i].removeEventListener("click", this.buttonAddTimelineHandler.bind(this));
+          firstAddButton[i].addEventListener("click", this.buttonAddTimelineHandler.bind(this));
         }
       });
   }
