@@ -1,3 +1,5 @@
+
+import localStoragefunction from "./localStoragefunction";
 class table {
   alirezamhi;
   static myTable() {
@@ -38,31 +40,30 @@ class table {
     // btnStyle.style.display = "none";
   }
 
-  static duringTime(start,end){
-    let timeStart = new Date(start)
-    let timeEnd = new Date(end)
-    if(timeEnd<timeStart){
-      timeEnd.setDate(timeEnd.getDate() + 1);
-    }
-    let different = timeEnd-timeStart
-    let hh = Math.floor(different/1000/60/60)
-    different-=(hh*1000*60*60)
-    let mm = Math.floor(different/1000/60)
-    different-=(mm*1000*60)
-    let ss = Math.floor(different/1000)
-    different-=(ss*1000)
-    return `${hh}:${mm}:${ss}`
+  static duringTime(duration) {
+    let clock = new Date(duration);
+    // clock.setMilliseconds(duration)
+    // clock.getUTCSeconds();
+    return clock.toISOString().slice(11,19)
+    //let durationSecond = duration/1000
+    // let hh = clock.getHours();
+    // let mm = clock.getMinutes();
+    // let ss = clock.getSeconds();
+    // return `${hh}:${mm}:${ss}`;
   }
 
-  static rowTemplate(list, itemInTimeLine) {
+  static rowTemplate(list) {
+    let itemInTimeLine = localStoragefunction.getItem()
+    console.log(itemInTimeLine);
     return list.map((item) => {
-      const { name, id, start , end } = item;
-      let duringTime = this.duringTime(start,end)
-      let isItemInTimeLine = itemInTimeLine?.find(node=>node.id==id)
+      const { name, id, duration } = item;
+      let durationTime = this.duringTime(duration);
+      // console.log(durationTime);
+      let isItemInTimeLine = itemInTimeLine?.find((node) => node.id == id);
       return `<tr>
                 <td>${id}</td>
                 <td>${name}</td>
-                <td>${duringTime}</td>
+                <td>${durationTime}</td>
                 <td>
                 ${
                   isItemInTimeLine
@@ -76,7 +77,8 @@ class table {
               </tr>`;
     });
   }
-  static createRow(list, itemInTimeLine) {
+  static createRow(list) {
+    let itemInTimeLine =localStoragefunction.getItem() 
     let tbody = document.querySelector("tbody");
     let tableTamplate = this.rowTemplate(list, itemInTimeLine);
     for (let i = 0; i < tableTamplate.length; i++) {
