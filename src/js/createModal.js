@@ -18,9 +18,12 @@ class createModal {
                     <ul class="pagination"></ul>
                 </nav>
             </div>`
-            : ""
+            : `
+            <div class="modal-footer">
+              <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal1">برگشت</button>
+            </div>
+            `
         }
-        
       </div>
     </div>
   </div>`;

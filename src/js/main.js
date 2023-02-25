@@ -6,21 +6,23 @@ import createModal from "./createModal";
 import table from "./table";
 import "../styles/modal.css";
 import localStoragefunction from "./localStoragefunction";
+import "../styles/buttonArea.css";
+import tableShowItem from "./tableShowItem";
 
 class main {
   constructor() {
     this.app = document.querySelector("#app");
-    this.itemInTimeLine = localStoragefunction.getItem()?localStoragefunction.getItem():[];
+    this.itemInTimeLine = localStoragefunction.getItem()
+      ? localStoragefunction.getItem()
+      : [];
     this.addEventHandler = this.buttonAddTimelineHandler.bind(this);
     // this.b=this.addEventListenerForMyAddButton.bind(this)
     this.buttonCondition = false;
   }
-  setLocalstorage(){
-    localStoragefunction.setitem(this.itemInTimeLine)
+  setLocalstorage() {
+    localStoragefunction.setitem(this.itemInTimeLine);
   }
-  wacher() {
-    // console.log(typeof this.$buttonAddTimelineHandler);
-  }
+  wacher() {}
 
   creatModalProgram() {
     let divShowItemArea = document.createElement("div");
@@ -57,9 +59,12 @@ class main {
   }
 
   createButtonShowModal() {
-    let buttonForShowModal = `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">Launch demo modal</button>`;
+    let buttonForShowModal = `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">افزودن برنامه</button>`;
+    let buttonForEditable = `<button class="btn btn-danger" id="editAble">ویرایش</button>`;
     let modalAreaButton = document.createElement("div");
-    modalAreaButton.innerHTML = buttonForShowModal;
+    modalAreaButton.classList.add("areaButton");
+    modalAreaButton.innerHTML += buttonForShowModal;
+    modalAreaButton.innerHTML += buttonForEditable;
     this.app.appendChild(modalAreaButton);
   }
 
@@ -72,22 +77,22 @@ class main {
   getLastItemInTimeLine() {
     if (this.itemInTimeLine.length) {
       let node = this.itemInTimeLine[this.itemInTimeLine.length - 1];
-      return (node.end) + 1000;
+      return node.end + 1000;
     }
-    return 0
+    return 0;
   }
 
   createTimeLineInApp() {
     let item = this.itemInTimeLine;
-    let self = this
+    let self = this;
     const options = {
       editable: {
-        add: true,
-        updateTime: true,
-        updateGroup: true,
+        add: false,
+        updateTime: false,
+        updateGroup: false,
         overrideItems: false,
-        updateTime: true,
-        remove: true,
+        updateTime: false,
+        remove: false,
       },
       // zoomable: false,
       // zoomMax: 86400000,
@@ -102,32 +107,28 @@ class main {
       min: 0,
       start: 0,
       end: 86400000,
-      onRemove:function (item,callback) {
-        console.log(item);
-        self.itemInTimeLine = self.itemInTimeLine.filter(node=>node.id!==item.id)
-        console.log(self.itemInTimeLine);
-        localStoragefunction.setitem(self.itemInTimeLine)
-        callback(item)
-        let fiveItemFirst = self.data.slice(0,5)
-        let rowTable = table.rowTemplate(fiveItemFirst,self.itemInTimeLine)
-        let tbody = document.querySelector("tbody")
-        tbody.innerHTML= ""
-        for (let i = 0; i < rowTable.length; i++) {
-          tbody.innerHTML+=rowTable[i]
-        }
-        let addButton = document.querySelectorAll(".addButton")
-        for (let i = 0; i < addButton.length; i++) {
-          addButton[i].addEventListener("click",self.buttonAddTimelineHandler)
-          
-        }
-      }	
+      onRemove: function (item, callback) {
+        let node = self.itemInTimeLine.find((node) => node.id == item.id);
+        let id = item.id;
+        let nodeId = `#addButton${item.id}`;
+        let addButton = document.querySelector(nodeId);
+        addButton.style.visibility = "visible";
+        self.itemInTimeLine = self.itemInTimeLine.filter(
+          (node) => node.id !== item.id
+        );
+        document.querySelector(".tbodyForShowItem").innerHTML=""
+        tableShowItem.createRowTable()
+        localStoragefunction.setitem(self.itemInTimeLine);
+        callback(item);
+      },
     };
 
     let timeLineArea = document.createElement("div");
     let timeLine = new createTimeLine(item, timeLineArea, options);
     this.currentTimeLine = timeLine.generateTimeLine(options);
     this.app.appendChild(timeLineArea);
-
+    
+    console.log(this.currentTimeLine.getItemRange());
   }
 
   setClockTemplate(item) {
@@ -146,8 +147,7 @@ class main {
     let buttonTarget = e.target.id;
     let buttonId = buttonTarget.substr(-1);
     let currnetNodeClickButton = this.data.find((node) => node.id == buttonId);
-    const { id , duration , name } = currnetNodeClickButton;
-    console.log(this.getLastItemInTimeLine());
+    const { id, duration, name } = currnetNodeClickButton;
     let obj = {
       id: id,
       content: name,
@@ -156,10 +156,9 @@ class main {
     };
     this.itemInTimeLine.push(obj);
     this.currentTimeLine.setItems(this.itemInTimeLine);
-    this.currentTimeLine.on("",(properties)=>alert("ali"))
     let btnStyle = e.target;
-    btnStyle.style.display = "none";
-    localStoragefunction.setitem(this.itemInTimeLine)
+    btnStyle.style.visibility = "hidden";
+    localStoragefunction.setitem(this.itemInTimeLine);
   }
 
   paginationButtonHandler(e) {
@@ -223,6 +222,42 @@ class main {
         }
       });
   }
+
+  Editable() {
+    let editAbleButton = document.querySelector("#editAble");
+    editAbleButton.addEventListener(
+      "click",
+      this.editableButtonHandler.bind(this)
+    );
+  }
+
+  editableButtonHandler() {
+    this.currentTimeLine.setOptions({
+      editable: {
+        updateTime: true,
+        updateGroup: true,
+        overrideItems: true,
+        remove: true,
+      },
+      onMoving:(item,callback)=>{
+        let currentItem = this.data.find(node=>node.id==item.id)
+        let start = new Date(item.start)
+        let end = new Date(item.end)
+        let duration = end-start
+        if(duration==currentItem.duration){
+          callback(item)
+        }
+      }
+    });
+  }
+  createTableForShowItem(){
+    let table = tableShowItem.createTableTemplate()
+    let divTableArea = document.createElement("div")
+    divTableArea.innerHTML=table
+    this.app.appendChild(divTableArea)
+    tableShowItem.createRowTable()
+  }
+
 }
 
 export default main;

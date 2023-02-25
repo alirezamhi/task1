@@ -54,25 +54,23 @@ class table {
 
   static rowTemplate(list) {
     let itemInTimeLine = localStoragefunction.getItem()
-    console.log(itemInTimeLine);
     return list.map((item) => {
       const { name, id, duration } = item;
       let durationTime = this.duringTime(duration);
-      // console.log(durationTime);
       let isItemInTimeLine = itemInTimeLine?.find((node) => node.id == id);
+      let style = isItemInTimeLine ? "visibility :hidden;":"visibility :visible;"
       return `<tr>
                 <td>${id}</td>
                 <td>${name}</td>
                 <td>${durationTime}</td>
                 <td>
-                ${
-                  isItemInTimeLine
-                    ? `<button class="btn btn-warning buttonPlayer" data-bs-toggle="modal" data-bs-target="#exampleModal2">+</button>`
-                    : `<div>
-                        <button class="btn btn-success addButton" id="addButton${id}">+</button>
-                        <button class="btn btn-warning buttonPlayer" data-bs-toggle="modal" data-bs-target="#exampleModal2">+</button>
-                      </div>`
-                }
+                    <div>
+                        <button class="btn btn-success addButton" id="addButton${id}" style="${style}">+</button>
+                        <button class="btn btn-warning buttonPlayer" data-bs-toggle="modal" data-bs-target="#exampleModal2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                      </svg></button>
+                    </div>
+                
                 </td>
               </tr>`;
     });

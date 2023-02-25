@@ -11,3 +11,6 @@ myMain.createButtonShowModal()
 myMain.addTableInModal()
 myMain.createTimeLineInApp()
 myMain.getDataFromApi()
+myMain.Editable()
+myMain.createTableForShowItem()
+
