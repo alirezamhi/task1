@@ -18,6 +18,8 @@ class main {
     this.addEventHandler = this.buttonAddTimelineHandler.bind(this);
     // this.b=this.addEventListenerForMyAddButton.bind(this)
     this.buttonCondition = false;
+    this.start;
+    this.end;
   }
   setLocalstorage() {
     localStoragefunction.setitem(this.itemInTimeLine);
@@ -116,8 +118,9 @@ class main {
         self.itemInTimeLine = self.itemInTimeLine.filter(
           (node) => node.id !== item.id
         );
+        console.log(self.itemInTimeLine,"delete");
         document.querySelector(".tbodyForShowItem").innerHTML=""
-        tableShowItem.createRowTable()
+        tableShowItem.createRowTable(self.itemInTimeLine)
         localStoragefunction.setitem(self.itemInTimeLine);
         callback(item);
       },
@@ -128,7 +131,6 @@ class main {
     this.currentTimeLine = timeLine.generateTimeLine(options);
     this.app.appendChild(timeLineArea);
     
-    console.log(this.currentTimeLine.getItemRange());
   }
 
   setClockTemplate(item) {
@@ -158,6 +160,8 @@ class main {
     this.currentTimeLine.setItems(this.itemInTimeLine);
     let btnStyle = e.target;
     btnStyle.style.visibility = "hidden";
+    document.querySelector(".tbodyForShowItem").innerHTML=""
+    tableShowItem.createRowTable(this.itemInTimeLine)
     localStoragefunction.setitem(this.itemInTimeLine);
   }
 
@@ -240,10 +244,11 @@ class main {
         remove: true,
       },
       onMoving:(item,callback)=>{
+        
         let currentItem = this.data.find(node=>node.id==item.id)
-        let start = new Date(item.start)
-        let end = new Date(item.end)
-        let duration = end-start
+        this.start = new Date(item.start)
+        this.end = new Date(item.end)
+        let duration = this.end-this.start
         if(duration==currentItem.duration){
           callback(item)
         }
@@ -252,10 +257,11 @@ class main {
   }
   createTableForShowItem(){
     let table = tableShowItem.createTableTemplate()
+    console.log(this.start,"startadsfgasdf");
     let divTableArea = document.createElement("div")
     divTableArea.innerHTML=table
     this.app.appendChild(divTableArea)
-    tableShowItem.createRowTable()
+    tableShowItem.createRowTable(this.itemInTimeLine,)
   }
 
 }
