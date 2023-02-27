@@ -1,0 +1,10 @@
+.needs-validation{
+    direction: ltr;
+}
+.validation{
+    display: none;
+    color: red;
+}
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }

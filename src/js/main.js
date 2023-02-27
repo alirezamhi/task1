@@ -8,6 +8,7 @@ import "../styles/modal.css";
 import localStoragefunction from "./localStoragefunction";
 import "../styles/buttonArea.css";
 import tableShowItem from "./tableShowItem";
+import createModalEditTime from "./createModalEditTime";
 
 class main {
   constructor() {
@@ -31,9 +32,19 @@ class main {
     divShowItemArea.innerHTML = createModal.myModal(
       1,
       "افزودن به برنامه",
-      true
+      "pagin"
     );
     this.app.appendChild(divShowItemArea);
+  }
+
+  createModalDeleteItem() {
+    let divDeleteModalArea = document.createElement("div");
+    divDeleteModalArea.innerHTML = createModal.myModal(
+      3,
+      "ایا مطمین هستید؟",
+      "deleteItem"
+    );
+    this.app.appendChild(divDeleteModalArea);
   }
 
   addEventListenerInItems(items, listener) {
@@ -45,7 +56,7 @@ class main {
 
   creatModalMovie() {
     let divShowMovieArea = document.createElement("div");
-    divShowMovieArea.innerHTML = createModal.myModal(2, "نمایش فیلم");
+    divShowMovieArea.innerHTML = createModal.myModal(2, "نمایش فیلم", "film");
     this.app.appendChild(divShowMovieArea);
     jwplayer("id2").setup({
       playlist: [
@@ -61,12 +72,16 @@ class main {
   }
 
   createButtonShowModal() {
+    let editButton = `<div>
+      <button class="btn btn-danger" id="editAble">ویرایش</button>
+      <button class="btn btn-success" id="editAbleCancle" style="display:none">لغو ویرایش</button>
+    </div>`;
     let buttonForShowModal = `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">افزودن برنامه</button>`;
-    let buttonForEditable = `<button class="btn btn-danger" id="editAble">ویرایش</button>`;
     let modalAreaButton = document.createElement("div");
     modalAreaButton.classList.add("areaButton");
     modalAreaButton.innerHTML += buttonForShowModal;
-    modalAreaButton.innerHTML += buttonForEditable;
+    modalAreaButton.innerHTML += editButton;
+
     this.app.appendChild(modalAreaButton);
   }
 
@@ -118,9 +133,9 @@ class main {
         self.itemInTimeLine = self.itemInTimeLine.filter(
           (node) => node.id !== item.id
         );
-        console.log(self.itemInTimeLine,"delete");
-        document.querySelector(".tbodyForShowItem").innerHTML=""
-        tableShowItem.createRowTable(self.itemInTimeLine)
+        document.querySelector(".tbodyForShowItem").innerHTML = "";
+        tableShowItem.createRowTable(self.itemInTimeLine);
+        self.deleteButtonInTable();
         localStoragefunction.setitem(self.itemInTimeLine);
         callback(item);
       },
@@ -130,7 +145,6 @@ class main {
     let timeLine = new createTimeLine(item, timeLineArea, options);
     this.currentTimeLine = timeLine.generateTimeLine(options);
     this.app.appendChild(timeLineArea);
-    
   }
 
   setClockTemplate(item) {
@@ -160,8 +174,9 @@ class main {
     this.currentTimeLine.setItems(this.itemInTimeLine);
     let btnStyle = e.target;
     btnStyle.style.visibility = "hidden";
-    document.querySelector(".tbodyForShowItem").innerHTML=""
-    tableShowItem.createRowTable(this.itemInTimeLine)
+    document.querySelector(".tbodyForShowItem").innerHTML = "";
+    tableShowItem.createRowTable(this.itemInTimeLine);
+    this.deleteButtonInTable();
     localStoragefunction.setitem(this.itemInTimeLine);
   }
 
@@ -233,9 +248,30 @@ class main {
       "click",
       this.editableButtonHandler.bind(this)
     );
+    let cancleEditAbleButton = document.querySelector("#editAbleCancle");
+    cancleEditAbleButton.addEventListener(
+      "click",
+      this.cancleEditButtonHandler.bind(this)
+    );
+  }
+
+  cancleEditButtonHandler() {
+    document.querySelector("#editAble").style.display = "";
+    document.querySelector("#editAbleCancle").style.display = "none";
+    this.currentTimeLine.setOptions({
+      editable: {
+        add:false,
+        updateTime: false,
+        updateGroup: false,
+        overrideItems: false,
+        remove: false,
+      },
+    });
   }
 
   editableButtonHandler() {
+    document.querySelector("#editAble").style.display = "none";
+    document.querySelector("#editAbleCancle").style.display = "";
     this.currentTimeLine.setOptions({
       editable: {
         updateTime: true,
@@ -243,26 +279,63 @@ class main {
         overrideItems: true,
         remove: true,
       },
-      onMoving:(item,callback)=>{
-        
-        let currentItem = this.data.find(node=>node.id==item.id)
-        this.start = new Date(item.start)
-        this.end = new Date(item.end)
-        let duration = this.end-this.start
-        if(duration==currentItem.duration){
-          callback(item)
+      onMoving: (item, callback) => {
+        let currentItem = this.data.find((node) => node.id == item.id);
+        let currentItemInTimeLine = this.itemInTimeLine.find(
+          (node) => node.id == item.id
+        );
+        currentItemInTimeLine.start = item.start;
+        currentItemInTimeLine.end = item.end;
+        this.start = new Date(item.start);
+        this.end = new Date(item.end);
+        let duration = this.end - this.start;
+        if (duration == currentItem.duration) {
+          callback(item);
+          document.querySelector(".tbodyForShowItem").innerHTML = "";
+          tableShowItem.createRowTable(this.itemInTimeLine);
+          this.deleteButtonInTable();
         }
-      }
+      },
     });
   }
-  createTableForShowItem(){
-    let table = tableShowItem.createTableTemplate()
-    console.log(this.start,"startadsfgasdf");
-    let divTableArea = document.createElement("div")
-    divTableArea.innerHTML=table
-    this.app.appendChild(divTableArea)
-    tableShowItem.createRowTable(this.itemInTimeLine,)
+  createTableForShowItem() {
+    let table = tableShowItem.createTableTemplate();
+    let divTableArea = document.createElement("div");
+    divTableArea.innerHTML = table;
+    this.app.appendChild(divTableArea);
+    tableShowItem.createRowTable(this.itemInTimeLine);
   }
+
+  deleteButtonInTable() {
+    let del = document.querySelectorAll(".deleteItem");
+    for (let i = 0; i < del.length; i++) {
+      del[i].addEventListener("click", this.deletHandler.bind(this));
+    }
+  }
+  deletHandler(e) {
+    let self = this;
+    let deleteButtonInModal = document.querySelector("#deleteButtonInModal");
+    let target = e.target;
+    self.currentId = target.id.slice(-1);
+    deleteButtonInModal.removeEventListener("click",this.deleteButtonHandler.bind(this));
+    deleteButtonInModal.addEventListener("click", this.deleteButtonHandler.bind(this));
+  }
+
+  deleteButtonHandler() {
+    this.itemInTimeLine = this.itemInTimeLine.filter(node=>node.id!==this.currentId)
+    localStoragefunction.setitem(this.itemInTimeLine)
+    document.querySelector(".tbodyForShowItem").innerHTML = "";
+    tableShowItem.createRowTable(this.itemInTimeLine);
+    this.deleteButtonInTable();
+    this.currentTimeLine.setItems(this.itemInTimeLine)
+    document.querySelector(`#addButton${this.currentId}`).style.visibility="visible"
+  }
+
+  createModalEditTime(){
+    createModalEditTime.createModal()
+    createModalEditTime.addBody()
+  }
+
 
 }
 

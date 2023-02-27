@@ -10,6 +10,7 @@ class tableShowItem{
                         <th scope="col">id</th>
                         <th scope="col">شروع</th>
                         <th scope="col">پایان</th>
+                        <th scope="col">عملیات</th>
                     </tr>
                 </thead>
                 <tbody class="tbodyForShowItem">
@@ -18,19 +19,35 @@ class tableShowItem{
             `
         )
     }
+
+    static creatDataForm(time){
+        let timeDataForm = new Date(time)
+        let hh = timeDataForm.getHours()
+        let mm = timeDataForm.getMinutes()
+        let ss = timeDataForm.getSeconds()
+        return `${hh}:${mm}:${ss}`
+    }
+
     static tamplateRowTableForItem(itemInTimeLine){
-        console.log(itemInTimeLine);
         let num = 0
         return itemInTimeLine.map(node=>{
             num++
             const {id,content,start,end} = node
+            let startDataForm =  this.creatDataForm(start)
+            let endDataForm = this.creatDataForm(end)
             return(`
                 <tr id="tableForItem${id}">
                     <td>${num}</td>
                     <td>${content}</td>
                     <td>${id}</td>
-                    <td>${start} ms</td>
-                    <td>${end} ms</td>
+                    <td>${startDataForm}</td>
+                    <td>${endDataForm}</td>
+                    <td>
+                    <div>
+                        <button type="button" class="btn btn-danger deleteItem" data-bs-toggle="modal" data-bs-target="#exampleModal3" id="deleteItem${id}">حذف</button>
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal4">ویرایش</button>
+                    <div>
+                    </td>
                 </tr>
             `)
         })

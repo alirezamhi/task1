@@ -1,6 +1,6 @@
 import table from "./table"
 class createModal {
-  static myModal(modalId, header, footer = false) {
+  static myModal(modalId, header, footer) {
     return `<div class="modal fade" id="exampleModal${modalId}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -9,20 +9,29 @@ class createModal {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="id${modalId}">
-
+          
         </div>
         ${
-          footer
+          footer=="pagin"
             ? `<div class="modal-footer">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination"></ul>
                 </nav>
             </div>`
-            : `
-            <div class="modal-footer">
+            :footer=="film" ?
+            `<div class="modal-footer">
               <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal1">برگشت</button>
             </div>
-            `
+            `:
+            footer=="deleteItem"?
+              `<div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                <button type="button" class="btn btn-danger" id="deleteButtonInModal" data-bs-dismiss="modal">حذف</button>
+              </div>`
+            :footer=="edit"?
+              `<div class="modal-footer">
+                <button class="btn btn-success">تایید</button>
+              </div>`:""
         }
       </div>
     </div>
