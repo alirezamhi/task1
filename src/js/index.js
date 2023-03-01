@@ -15,4 +15,5 @@ myMain.Editable();
 myMain.createTableForShowItem();
 myMain.createModalDeleteItem();
 myMain.deleteButtonInTable();
-myMain.createModalEditTime()
+myMain.createModalEditTime();
+myMain.editButtonInTable();

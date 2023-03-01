@@ -30,7 +30,7 @@ class createModal {
               </div>`
             :footer=="edit"?
               `<div class="modal-footer">
-                <button class="btn btn-success">تایید</button>
+                <button class="btn btn-success" id="addEditButton">تایید</button>
               </div>`:""
         }
       </div>

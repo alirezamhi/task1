@@ -45,7 +45,7 @@ class tableShowItem{
                     <td>
                     <div>
                         <button type="button" class="btn btn-danger deleteItem" data-bs-toggle="modal" data-bs-target="#exampleModal3" id="deleteItem${id}">حذف</button>
-                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal4">ویرایش</button>
+                        <button type="button" class="btn btn-info editButtonInTable" id="editTable${id}" data-bs-toggle="modal" data-bs-target="#exampleModal4">ویرایش</button>
                     <div>
                     </td>
                 </tr>

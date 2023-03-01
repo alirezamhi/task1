@@ -9,6 +9,7 @@ import localStoragefunction from "./localStoragefunction";
 import "../styles/buttonArea.css";
 import tableShowItem from "./tableShowItem";
 import createModalEditTime from "./createModalEditTime";
+import { moment } from "vis-timeline/standalone";
 
 class main {
   constructor() {
@@ -21,7 +22,10 @@ class main {
     this.buttonCondition = false;
     this.start;
     this.end;
+    this.idEditButton;
+    this.myEditModal=new createModalEditTime(this.itemInTimeLine)
   }
+  
   setLocalstorage() {
     localStoragefunction.setitem(this.itemInTimeLine);
   }
@@ -94,7 +98,7 @@ class main {
   getLastItemInTimeLine() {
     if (this.itemInTimeLine.length) {
       let node = this.itemInTimeLine[this.itemInTimeLine.length - 1];
-      return node.end + 1000;
+      return node.end ;
     }
     return 0;
   }
@@ -177,6 +181,8 @@ class main {
     document.querySelector(".tbodyForShowItem").innerHTML = "";
     tableShowItem.createRowTable(this.itemInTimeLine);
     this.deleteButtonInTable();
+    this.editButtonInTable()
+
     localStoragefunction.setitem(this.itemInTimeLine);
   }
 
@@ -294,6 +300,8 @@ class main {
           document.querySelector(".tbodyForShowItem").innerHTML = "";
           tableShowItem.createRowTable(this.itemInTimeLine);
           this.deleteButtonInTable();
+          this.editButtonInTable()
+
         }
       },
     });
@@ -327,13 +335,52 @@ class main {
     document.querySelector(".tbodyForShowItem").innerHTML = "";
     tableShowItem.createRowTable(this.itemInTimeLine);
     this.deleteButtonInTable();
+    this.editButtonInTable()
     this.currentTimeLine.setItems(this.itemInTimeLine)
     document.querySelector(`#addButton${this.currentId}`).style.visibility="visible"
   }
 
+
+  editButtonInTable(){
+    let editButtonInTable = document.querySelectorAll(".editButtonInTable")
+    for (let i = 0; i < editButtonInTable.length; i++) {
+      editButtonInTable[i].addEventListener("click",this.editbuttonInTableHandler.bind(this))
+    }
+  }
+
+  editbuttonInTableHandler(e){
+    let id = e.target.id
+    this.idEditButton = id.slice(-1)
+    // let myEditModal = new createModalEditTime(this.idEditButton,this.itemInTimeLine)
+    this.myEditModal.findNodeForSetTimeInInput(this.idEditButton)
+    this.myEditModal.addBody(this.itemInTimeLine)
+    
+    // let enterButton = document.querySelector("#addEditButton")
+    // enterButton.addEventListener("click",this.enterButtonHandler.bind(this))
+  }
+
+  enterButtonHandler(){
+    let self = this
+    let findEditItemInTable = this.itemInTimeLine.find(node=>node.id==this.idEditButton)
+    let myEditModal = new createModalEditTime(this.idEditButton,this.itemInTimeLine)
+    myEditModal.findNodeForSetTimeInInput()
+    let startEdit = myEditModal.startTimeEdit()
+    let endEdit = myEditModal.endTimeEdit() 
+    findEditItemInTable.start = startEdit
+    findEditItemInTable.end = endEdit
+    localStoragefunction.setitem(this.itemInTimeLine)
+    document.querySelector(".tbodyForShowItem").innerHTML = "";
+    tableShowItem.createRowTable(this.itemInTimeLine);
+    this.deleteButtonInTable();
+    this.editButtonInTable()
+  }
+
   createModalEditTime(){
-    createModalEditTime.createModal()
-    createModalEditTime.addBody()
+    // console.log(this.);
+    let myEditModal = new createModalEditTime(this.idEditButton,this.itemInTimeLine)
+    // myEditModal.findNodeForSetTimeInInput()
+    myEditModal.createModal()
+    // myEditModal.addBody(this.itemInTimeLine)
   }
 
 
