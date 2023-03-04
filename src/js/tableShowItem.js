@@ -21,10 +21,12 @@ class tableShowItem{
     }
 
     static creatDataForm(time){
-        let timeDataForm = new Date(time)
-        let hh = timeDataForm.getHours()
-        let mm = timeDataForm.getMinutes()
-        let ss = timeDataForm.getSeconds()
+        let timeDataForm = new Date(time).toUTCString()
+        let hhmmssFormat = timeDataForm.slice(17,26)
+        let TimeFormat = hhmmssFormat.split(":")
+        let hh = TimeFormat[0]
+        let mm = TimeFormat[1]
+        let ss = TimeFormat[2]
         return `${hh}:${mm}:${ss}`
     }
 

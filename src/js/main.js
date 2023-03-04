@@ -143,6 +143,9 @@ class main {
         localStoragefunction.setitem(self.itemInTimeLine);
         callback(item);
       },
+      moment: function(date) {
+        return moment(date).utcOffset('+00:00');
+      }
     };
 
     let timeLineArea = document.createElement("div");
@@ -153,14 +156,8 @@ class main {
 
   setClockTemplate(item) {
     let clock = new Date(item);
-    // return clock
     clock.getUTCSeconds(item);
     return clock.toISOString().slice(11, 19);
-    // return clock
-    // let h = clock.getHours();
-    // let m = clock.getMinutes();
-    // let s = clock.getSeconds();
-    // return `${h}:${m}:${s}`;
   }
 
   buttonAddTimelineHandler(e) {
@@ -182,7 +179,6 @@ class main {
     tableShowItem.createRowTable(this.itemInTimeLine);
     this.deleteButtonInTable();
     this.editButtonInTable()
-
     localStoragefunction.setitem(this.itemInTimeLine);
   }
 
@@ -272,6 +268,9 @@ class main {
         overrideItems: false,
         remove: false,
       },
+      // onRemove:(item,callback)=>{
+      //   callback(null)
+      // }
     });
   }
 
@@ -285,24 +284,41 @@ class main {
         overrideItems: true,
         remove: true,
       },
+      // onRemove:(item,callback)=>{
+      //   callback(item)
+      // },
       onMoving: (item, callback) => {
         let currentItem = this.data.find((node) => node.id == item.id);
         let currentItemInTimeLine = this.itemInTimeLine.find(
           (node) => node.id == item.id
         );
-        currentItemInTimeLine.start = item.start;
-        currentItemInTimeLine.end = item.end;
+        let startToFormatUTC = new Date(item.start).toUTCString().slice(17,26)
+        let arrayTohhmmssForStart= startToFormatUTC.split(":")
+        let hhStart = arrayTohhmmssForStart[0]*3600000
+        let mmStart = arrayTohhmmssForStart[1]*60000
+        let ssStart = arrayTohhmmssForStart[2]*1000
+        let resultStart = +(hhStart+mmStart+ssStart)
+        currentItemInTimeLine.start = resultStart;
+        let endToFormatUTC = new Date(item.end).toUTCString().slice(17,26)
+        let arrayTohhmmssForend= endToFormatUTC.split(":")
+        let hhEnd = arrayTohhmmssForend[0]*3600000
+        let mmEnd = arrayTohhmmssForend[1]*60000
+        let ssEnd = arrayTohhmmssForend[2]*1000
+        let resultEnd = +(hhEnd+mmEnd+ssEnd)
+        currentItemInTimeLine.end = resultEnd;
         this.start = new Date(item.start);
         this.end = new Date(item.end);
         let duration = this.end - this.start;
-        if (duration == currentItem.duration) {
-          callback(item);
-          document.querySelector(".tbodyForShowItem").innerHTML = "";
-          tableShowItem.createRowTable(this.itemInTimeLine);
-          this.deleteButtonInTable();
-          this.editButtonInTable()
-
+        if (duration == currentItem.duration ) {
+          if(new Date(item.start).getTime()>=0 && new Date(item.end).getTime()<=86400000){
+            document.querySelector(".tbodyForShowItem").innerHTML = "";
+            callback(item);
+            tableShowItem.createRowTable(this.itemInTimeLine);
+            this.deleteButtonInTable();
+            this.editButtonInTable()
+          }
         }
+        
       },
     });
   }
@@ -383,6 +399,23 @@ class main {
     // myEditModal.addBody(this.itemInTimeLine)
   }
 
+  enterEditButton(){
+    let button = document.querySelector("#addEditButton")
+    button.addEventListener("click",this.asigneNewEdit.bind(this))
+  }
+  asigneNewEdit(){
+    let time = this.myEditModal.enterEditation()
+    let findForEnterEdit = this.itemInTimeLine.find(node=>node.id==time.id)
+    findForEnterEdit.start = time.start
+    findForEnterEdit.end = time.end
+    console.log("start",time.end);
+    document.querySelector(".tbodyForShowItem").innerHTML = "";
+    tableShowItem.createRowTable(this.itemInTimeLine);
+    this.deleteButtonInTable();
+    this.editButtonInTable()
+    this.currentTimeLine.setItems(this.itemInTimeLine)
+    console.log(this.itemInTimeLine,"alireza9");
+  }
 
 }
 

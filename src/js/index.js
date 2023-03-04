@@ -17,3 +17,4 @@ myMain.createModalDeleteItem();
 myMain.deleteButtonInTable();
 myMain.createModalEditTime();
 myMain.editButtonInTable();
+myMain.enterEditButton()
