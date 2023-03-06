@@ -13,10 +13,8 @@ class tableShowItem{
                         <th scope="col">عملیات</th>
                     </tr>
                 </thead>
-                <tbody class="tbodyForShowItem">
-                </tbody>
-            </table>
-            `
+                <tbody class="tbodyForShowItem"></tbody>
+            </table>`
         )
     }
 
@@ -60,6 +58,7 @@ class tableShowItem{
         for (let i = 0; i < row.length; i++) {
             TableForShowMovie.innerHTML+=row[i]
         }
+
     }
 }
 export default tableShowItem

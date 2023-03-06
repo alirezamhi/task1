@@ -56,40 +56,41 @@ class createModalEditTime{
                 </div>
                 <form class="row g-3 needs-validation" novalidate>
                     <div class="row bodyModalForEdit">
+                        <p>زمان شروع</p>
                         <div class="col-md-3">
-                            <label for="hourForm" class="form-label">ساعت</label>
-                            <input type="tell" class="form-control hourInput" id="hourFormStart" maxlength="2" minlength="2" max="2" min="2" value="${this.startHour}">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="minutsForm" class="form-label">دقیقه</label>
-                            <input type="tell" class="form-control minutsInput" id="minutsFormStart" maxlength="2" minlength=2 max="2" min="2" value="${this.startMinutes}">
+                            <label for="miliSecondForm" class="form-label ">میلی ثانیه</label>
+                            <input type="tell" class="form-control milisecondInput" id="miliSecondFormStart" max="2" min="2" maxlength="3" minlength="2" value="${this.startMiliSeccond}">
                         </div>
                         <div class="col-md-3">
                             <label for="secondForm" class="form-label ">ثانیه</label>
                             <input type="tell" class="form-control seccondInput" id="secondFormStart" aria-describedby="inputGroupPrepend" max="2" min="2" maxlength="2" minlength="2" value="${this.startSeccond}">
                         </div>
                         <div class="col-md-3">
-                            <label for="miliSecondForm" class="form-label ">میلی ثانیه</label>
-                            <input type="tell" class="form-control milisecondInput" id="miliSecondFormStart" max="2" min="2" maxlength="3" minlength="2" value="${this.startMiliSeccond}">
+                            <label for="minutsForm" class="form-label">دقیقه</label>
+                            <input type="tell" class="form-control minutsInput" id="minutsFormStart" maxlength="2" minlength=2 max="2" min="2" value="${this.startMinutes}">
                         </div>
-                    </div>
-                    <div class="row  bodyModalForEdit">
                         <div class="col-md-3">
                             <label for="hourForm" class="form-label">ساعت</label>
-                            <input type="tell" class="form-control hourInput" id="hourFormEnd" maxlength="2" minlength="2" max="2" min="2" value="${this.endHour}">
+                            <input type="tell" class="form-control hourInput" id="hourFormStart" maxlength="2" minlength="2" max="2" min="2" value="${this.startHour}">
                         </div>
-                        
+                    </div>
+                    <div class="row  bodyModalForEdit mt-3">
+                        <p>زمان پایان</p>
                         <div class="col-md-3">
-                            <label for="minutsForm" class="form-label">دقیقه</label>
-                            <input type="tell" class="form-control minutsInput" id="minutsFormEnd" maxlength="2" minlength="2" max="2" min="2" value="${this.endMinutes}">
+                            <label for="miliSecondForm" class="form-label ">میلی ثانیه</label>
+                            <input type="tell" class="form-control milisecondInput" id="miliSecondFormEnd" maxlength="3" minlength="2" max="2" min="2" value="${this.endMiliSeccond}">
                         </div>
                         <div class="col-md-3">
                             <label for="secondForm" class="form-label ">ثانیه</label>
                             <input type="tell" class="form-control seccondInput" id="secondFormEnd" aria-describedby="inputGroupPrepend" maxlength="2" minlength="2" max="2" min="2" value="${this.endSeccond}">
                         </div>
                         <div class="col-md-3">
-                            <label for="miliSecondForm" class="form-label ">میلی ثانیه</label>
-                            <input type="tell" class="form-control milisecondInput" id="miliSecondFormEnd" maxlength="3" minlength="2" max="2" min="2" value="${this.endMiliSeccond}">
+                            <label for="minutsForm" class="form-label">دقیقه</label>
+                            <input type="tell" class="form-control minutsInput" id="minutsFormEnd" maxlength="2" minlength="2" max="2" min="2" value="${this.endMinutes}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="hourForm" class="form-label">ساعت</label>
+                            <input type="tell" class="form-control hourInput" id="hourFormEnd" maxlength="2" minlength="2" max="2" min="2" value="${this.endHour}">
                         </div>
                     </div>
                 </form>
@@ -203,19 +204,20 @@ class createModalEditTime{
     }
 
     enterEditation(){
-        let hourInputStart = document.querySelector("#hourFormStart").value*36000
+        let hourInputStart = document.querySelector("#hourFormStart").value*3600000
         let minetsInputStart = document.querySelector("#minutsFormStart").value*600
         let seccondInputStart = document.querySelector("#secondFormStart").value*10
         let miliseccondInputStart = document.querySelector("#miliSecondFormStart").value
-        let hourInputEnd = document.querySelector("#hourFormEnd").value*36000
+        let hourInputEnd = document.querySelector("#hourFormEnd").value*3600000
         let minetsInputEnd = document.querySelector("#minutsFormEnd").value*600
         let seccondInputEnd = document.querySelector("#secondFormEnd").value*10
         let miliseccondInputEnd = document.querySelector("#miliSecondFormEnd").value
         // let start = `${hourInputStart}:${minetsInputStart}:${seccondInputStart}:${miliseccondInputStart}`
-        let start = +(hourInputStart+minetsInputStart+seccondInputStart+miliseccondInputStart)
-        let end = +(hourInputEnd+minetsInputEnd+seccondInputEnd+miliseccondInputEnd)
+        let start = +(hourInputStart+minetsInputStart+seccondInputStart+(+miliseccondInputStart))
+        let end = +(hourInputEnd+minetsInputEnd+seccondInputEnd+(+miliseccondInputEnd))
         if(!this.checkingDuretion()){
-            let endCurrentNode = this.currentNode.end+start
+            let duration = this.currentNode.end - this.currentNode.start
+            let endCurrentNode = start+duration
             return {start:start,end:endCurrentNode,id:this.id}
         }else{
             return {start:start,end:end,id:this.id}

@@ -128,21 +128,21 @@ class main {
       min: 0,
       start: 0,
       end: 86400000,
-      onRemove: function (item, callback) {
-        let node = self.itemInTimeLine.find((node) => node.id == item.id);
-        let id = item.id;
-        let nodeId = `#addButton${item.id}`;
-        let addButton = document.querySelector(nodeId);
-        addButton.style.visibility = "visible";
-        self.itemInTimeLine = self.itemInTimeLine.filter(
-          (node) => node.id !== item.id
-        );
-        document.querySelector(".tbodyForShowItem").innerHTML = "";
-        tableShowItem.createRowTable(self.itemInTimeLine);
-        self.deleteButtonInTable();
-        localStoragefunction.setitem(self.itemInTimeLine);
-        callback(item);
-      },
+      // onRemove: function (item, callback) {
+      //   let node = self.itemInTimeLine.find((node) => node.id == item.id);
+      //   let id = item.id;
+      //   let nodeId = `#addButton${item.id}`;
+      //   let addButton = document.querySelector(nodeId);
+      //   addButton.style.visibility = "visible";
+      //   self.itemInTimeLine = self.itemInTimeLine.filter(
+      //     (node) => node.id !== item.id
+      //   );
+      //   document.querySelector(".tbodyForShowItem").innerHTML = "";
+      //   tableShowItem.createRowTable(self.itemInTimeLine);
+      //   self.deleteButtonInTable();
+      //   localStoragefunction.setitem(self.itemInTimeLine);
+      //   callback(item);
+      // },
       moment: function(date) {
         return moment(date).utcOffset('+00:00');
       }
@@ -268,13 +268,15 @@ class main {
         overrideItems: false,
         remove: false,
       },
-      // onRemove:(item,callback)=>{
-      //   callback(null)
-      // }
+      onRemove:(item,callback)=>{
+        callback(null)
+      }
     });
   }
 
   editableButtonHandler() {
+    let self = this
+    let big , small 
     document.querySelector("#editAble").style.display = "none";
     document.querySelector("#editAbleCancle").style.display = "";
     this.currentTimeLine.setOptions({
@@ -284,14 +286,26 @@ class main {
         overrideItems: true,
         remove: true,
       },
-      // onRemove:(item,callback)=>{
-      //   callback(item)
-      // },
+      onRemove: function (item, callback) {
+        let nodeId = `#addButton${item.id}`;
+        let addButton = document.querySelector(nodeId);
+        addButton.style.visibility = "visible";
+        self.itemInTimeLine = self.itemInTimeLine.filter(
+          (node) => node.id !== item.id
+        );
+        document.querySelector(".tbodyForShowItem").innerHTML = "";
+        tableShowItem.createRowTable(self.itemInTimeLine);
+        self.deleteButtonInTable();
+        self.editButtonInTable()
+        localStoragefunction.setitem(self.itemInTimeLine);
+        callback(item);
+      },
       onMoving: (item, callback) => {
         let currentItem = this.data.find((node) => node.id == item.id);
         let currentItemInTimeLine = this.itemInTimeLine.find(
           (node) => node.id == item.id
         );
+        let indexNode = this.itemInTimeLine.indexOf(currentItemInTimeLine)
         let startToFormatUTC = new Date(item.start).toUTCString().slice(17,26)
         let arrayTohhmmssForStart= startToFormatUTC.split(":")
         let hhStart = arrayTohhmmssForStart[0]*3600000
@@ -313,12 +327,18 @@ class main {
           if(new Date(item.start).getTime()>=0 && new Date(item.end).getTime()<=86400000){
             document.querySelector(".tbodyForShowItem").innerHTML = "";
             callback(item);
+            this.itemInTimeLine.sort((a,b)=>{if(a.start>b.start){
+              return -1
+            }else{
+              return 1
+            }})
+            console.log(this.itemInTimeLine.reverse());
+            localStoragefunction.setitem(this.itemInTimeLine)
             tableShowItem.createRowTable(this.itemInTimeLine);
             this.deleteButtonInTable();
-            this.editButtonInTable()
+            this.editButtonInTable();
           }
         }
-        
       },
     });
   }
@@ -337,10 +357,13 @@ class main {
     }
   }
   deletHandler(e) {
+    let modalBodyForDeleteItem = document.querySelector("#id3")
     let self = this;
     let deleteButtonInModal = document.querySelector("#deleteButtonInModal");
     let target = e.target;
     self.currentId = target.id.slice(-1);
+    let HtmlInModalBody = `<p>ایا میخواهید ایتم ${this.currentId} را حذف کنید</p>`
+    modalBodyForDeleteItem.innerHTML=HtmlInModalBody
     deleteButtonInModal.removeEventListener("click",this.deleteButtonHandler.bind(this));
     deleteButtonInModal.addEventListener("click", this.deleteButtonHandler.bind(this));
   }
@@ -403,18 +426,18 @@ class main {
     let button = document.querySelector("#addEditButton")
     button.addEventListener("click",this.asigneNewEdit.bind(this))
   }
+
+
   asigneNewEdit(){
     let time = this.myEditModal.enterEditation()
     let findForEnterEdit = this.itemInTimeLine.find(node=>node.id==time.id)
     findForEnterEdit.start = time.start
     findForEnterEdit.end = time.end
-    console.log("start",time.end);
     document.querySelector(".tbodyForShowItem").innerHTML = "";
     tableShowItem.createRowTable(this.itemInTimeLine);
     this.deleteButtonInTable();
     this.editButtonInTable()
     this.currentTimeLine.setItems(this.itemInTimeLine)
-    console.log(this.itemInTimeLine,"alireza9");
   }
 
 }
