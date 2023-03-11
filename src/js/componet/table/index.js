@@ -1,19 +1,11 @@
-import localStoragefunction from "./localStoragefunction";
-class Table {
-    
-  static createTable(columns) {
-    let temp = ``;
-    for (const col of columns) {
-      temp += `<th scope="col">${col.name}</th>`;
-    }
-    return getTableTemplate(temp);
-  }
-  getTableTemplate(temp) {
+import localStoragefunction from "../../localStoragefunction";
+class Table {    
+  createTableTemplate(temp) {
     return `<table class="table">
         <thead>
-        <tr>
-           ${temp}
-        </tr>
+          <tr>
+            ${temp.map(node=>`<th>${node}</th>`).join(" ")}
+          </tr>
         </thead>
         <tbody></tbody>
     </table>

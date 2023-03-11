@@ -10,8 +10,10 @@ import "../styles/buttonArea.css";
 import tableShowItem from "./tableShowItem";
 import createModalEditTime from "./createModalEditTime";
 import { moment } from "vis-timeline/standalone";
+import index from "./componet";
 
-class main {
+
+class App {
   constructor() {
     this.app = document.querySelector("#app");
     this.itemInTimeLine = localStoragefunction.getItem()
@@ -62,17 +64,7 @@ class main {
     let divShowMovieArea = document.createElement("div");
     divShowMovieArea.innerHTML = createModal.myModal(2, "نمایش فیلم", "film");
     this.app.appendChild(divShowMovieArea);
-    jwplayer("id2").setup({
-      playlist: [
-        {
-          file: "https://mediamarketstreamer.iriborg.ir/timeshift/588/2023-02-14/123148271.mp4",
-        },
-      ],
-      width: 463,
-      height: 320,
-      aspectratio: "12:12",
-      responsive: true,
-    });
+  
   }
 
   createButtonShowModal() {
@@ -80,7 +72,7 @@ class main {
       <button class="btn btn-danger" id="editAble">ویرایش</button>
       <button class="btn btn-success" id="editAbleCancle" style="display:none">لغو ویرایش</button>
     </div>`;
-    let buttonForShowModal = `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">افزودن برنامه</button>`;
+    let buttonForShowModal = `<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal1">افزودن برنامه</button>`;
     let modalAreaButton = document.createElement("div");
     modalAreaButton.classList.add("areaButton");
     modalAreaButton.innerHTML += buttonForShowModal;
@@ -106,48 +98,6 @@ class main {
   createTimeLineInApp() {
     let item = this.itemInTimeLine;
     let self = this;
-    const options = {
-      editable: {
-        add: false,
-        updateTime: false,
-        updateGroup: false,
-        overrideItems: false,
-        updateTime: false,
-        remove: false,
-      },
-      // zoomable: false,
-      // zoomMax: 86400000,
-      // zoomMin: 86400000,
-      // showCurrentTime: false,
-      // moveable: false,
-      // stack:false,
-      // stackSubgroups:false,
-      // zoomKey:'day',
-      // timeAxis: {scale: 'hour', step: 5},
-      max: 86400000,
-      min: 0,
-      start: 0,
-      end: 86400000,
-      // onRemove: function (item, callback) {
-      //   let node = self.itemInTimeLine.find((node) => node.id == item.id);
-      //   let id = item.id;
-      //   let nodeId = `#addButton${item.id}`;
-      //   let addButton = document.querySelector(nodeId);
-      //   addButton.style.visibility = "visible";
-      //   self.itemInTimeLine = self.itemInTimeLine.filter(
-      //     (node) => node.id !== item.id
-      //   );
-      //   document.querySelector(".tbodyForShowItem").innerHTML = "";
-      //   tableShowItem.createRowTable(self.itemInTimeLine);
-      //   self.deleteButtonInTable();
-      //   localStoragefunction.setitem(self.itemInTimeLine);
-      //   callback(item);
-      // },
-      moment: function(date) {
-        return moment(date).utcOffset('+00:00');
-      }
-    };
-
     let timeLineArea = document.createElement("div");
     let timeLine = new createTimeLine(item, timeLineArea, options);
     this.currentTimeLine = timeLine.generateTimeLine(options);
@@ -440,6 +390,31 @@ class main {
     this.currentTimeLine.setItems(this.itemInTimeLine)
   }
 
+  runApp(){
+    let myIndex = new index()
+    myIndex.buttonForEditAble()
+    myIndex.showModalItemTableButton()
+    myIndex.createModal()
+    myIndex.createTimeLine()
+    myIndex.addTableInModal()
+  }
+
+  changeData(param) {
+    switch (param.type) {
+      case 'add':
+        //
+        break;
+    
+      default:
+        break;
+    }
+  }
+
 }
 
-export default main;
+
+
+
+export default App;
+
+
