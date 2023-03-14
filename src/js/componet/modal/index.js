@@ -29,7 +29,7 @@ class modal {
               </div>`
             :footer=="deleteItem"?
               `<div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >انصراف</button>
                 <button type="button" class="btn btn-danger" id="deleteButtonInModal" data-bs-dismiss="modal">حذف</button>
               </div>`
             :footer=="edit"?

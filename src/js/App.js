@@ -67,7 +67,7 @@ class App {
   
   }
 
-  createButtonShowModal() {
+  createButtonShowModal(){
     let editButton = `<div>
       <button class="btn btn-danger" id="editAble">ویرایش</button>
       <button class="btn btn-success" id="editAbleCancle" style="display:none">لغو ویرایش</button>
@@ -393,22 +393,17 @@ class App {
   runApp(){
     let myIndex = new index()
     myIndex.buttonForEditAble()
-    myIndex.showModalItemTableButton()
+    myIndex.showModalItemButton()
     myIndex.createModal()
     myIndex.createTimeLine()
-    myIndex.addTableInModal()
+    // myIndex.addTableInModal()
+    myIndex.createTableForShowItem()
+    myIndex.getData()
+    myIndex.setEditableEvent()
+    myIndex.setDeleteEvent()
+    myIndex.setEditButton()
   }
 
-  changeData(param) {
-    switch (param.type) {
-      case 'add':
-        //
-        break;
-    
-      default:
-        break;
-    }
-  }
 
 }
 

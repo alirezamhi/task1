@@ -42,14 +42,7 @@ class table {
 
   static duringTime(duration) {
     let clock = new Date(duration);
-    // clock.setMilliseconds(duration)
-    // clock.getUTCSeconds();
     return clock.toISOString().slice(11,19)
-    //let durationSecond = duration/1000
-    // let hh = clock.getHours();
-    // let mm = clock.getMinutes();
-    // let ss = clock.getSeconds();
-    // return `${hh}:${mm}:${ss}`;
   }
 
   static rowTemplate(list) {

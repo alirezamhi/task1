@@ -1,62 +1,46 @@
-import "../styles/form.css"
-import createModal from "./createModal";
-class createModalEditTime{
-    constructor(itemInTimeLine){ 
+class timespan{
+    constructor(itemInTimeLine){
         this.itemInTimeLine = itemInTimeLine
-        this.currentNode 
     }
-
-    findNodeForSetTimeInInput(id){
-        this.currentNode = this.itemInTimeLine.find(item=>item.id==id)
-        this.id = id
-        this.duration = this.currentNode.end - this.currentNode.start
-        let timeFormat = new Date(this.duration).toUTCString().slice(17,26).split(":")
-        let hh = timeFormat[0]
-        let mm = timeFormat[1]
-        let ss = timeFormat[2]
-        this.hhmmss = `${hh}:${mm}:${ss}`
-        let startDataForm = new Date(this.currentNode.start).toUTCString()
-        let timeFormathhmmssStart = startDataForm.slice(17,26).split(":")
-        this.startHour=timeFormathhmmssStart[0]
-        this.startMinutes = timeFormathhmmssStart[1]
-        this.startSeccond = timeFormathhmmssStart[2]
-        this.startMiliSeccond = "00"
-        let endDataForm = new Date(this.currentNode.end).toUTCString()
-        let timeFormathhmmssEnd = endDataForm.slice(17,26).split(":")
-        this.endHour=timeFormathhmmssEnd[0]
-        this.endMinutes = timeFormathhmmssEnd[1]
-        this.endSeccond = timeFormathhmmssEnd[2]
-        this.endMiliSeccond = "00"
-    }
-
-
-    createModal(){
-        let divArea = document.createElement("div")
-        divArea.innerHTML=createModal.myModal(4,"ویرایش","edit")
-        document.querySelector("#app").appendChild(divArea)
-    }    
-
-
-    addBody(itemInTimeLine){
-        this.itemInTimeLine = itemInTimeLine
-        let bodyModal = document.querySelector("#id4")
-        bodyModal.innerHTML=this.editTemplate()
-        this.setValidInput()
+    findNodeForSetTimeInInput(e){
+        let id = e.dataset.id
+        console.log(id);
+        // this.currentNode = this.itemInTimeLine.find(item=>item.id==id)
+        // console.log(this.this.currentNode);
+        // this.id = id
+        // this.duration = this.currentNode.end - this.currentNode.start
+        // let timeFormat = new Date(this.duration).toUTCString().slice(17,26).split(":")
+        // let hh = timeFormat[0]
+        // let mm = timeFormat[1]
+        // let ss = timeFormat[2]
+        // this.hhmmss = `${hh}:${mm}:${ss}`
+        // let startDataForm = new Date(this.currentNode.start).toUTCString()
+        // let timeFormathhmmssStart = startDataForm.slice(17,26).split(":")
+        // this.startHour=timeFormathhmmssStart[0]
+        // this.startMinutes = timeFormathhmmssStart[1]
+        // this.startSeccond = timeFormathhmmssStart[2]
+        // this.startMiliSeccond = "00"
+        // let endDataForm = new Date(this.currentNode.end).toUTCString()
+        // let timeFormathhmmssEnd = endDataForm.slice(17,26).split(":")
+        // this.endHour=timeFormathhmmssEnd[0]
+        // this.endMinutes = timeFormathhmmssEnd[1]
+        // this.endSeccond = timeFormathhmmssEnd[2]
+        // this.endMiliSeccond = "00"
     }
 
 
-    editTemplate(){ 
+    createTemplate(){
         return(
             `<div>
                 <div class="validation" style="display:none">
-                    <p>لطفا عدد را درست وارد کنید</p>
+                    <h5>لطفا عدد را درست وارد کنید</h5>
                 </div>
                 <div class="duration">
-                    <p>لطفا مدت  ${this.hhmmss} را تغیر ندهید<p>
+                    <h5>لطفا مدت  ${this.hhmmss} را تغیر ندهید<h5>
                 </div>
                 <form class="row g-3 needs-validation" novalidate>
                     <div class="row bodyModalForEdit">
-                        <p>زمان شروع</p>
+                        <h5>زمان شروع</h5>
                         <div class="col-md-3">
                             <label for="miliSecondForm" class="form-label ">میلی ثانیه</label>
                             <input type="tell" class="form-control milisecondInput" id="miliSecondFormStart" max="2" min="2" maxlength="3" minlength="2" value="${this.startMiliSeccond}">
@@ -75,7 +59,7 @@ class createModalEditTime{
                         </div>
                     </div>
                     <div class="row  bodyModalForEdit mt-3">
-                        <p>زمان پایان</p>
+                        <h5>زمان پایان</h5>
                         <div class="col-md-3">
                             <label for="miliSecondForm" class="form-label ">میلی ثانیه</label>
                             <input type="tell" class="form-control milisecondInput" id="miliSecondFormEnd" maxlength="3" minlength="2" max="2" min="2" value="${this.endMiliSeccond}">
@@ -98,15 +82,6 @@ class createModalEditTime{
         )
     }
 
-
-    validateHandler(e){
-        if(e.target.value.length>2){
-            validat.style.display="block"
-        }else{
-            validat.style.display="none"
-        }
-    }
-    
     setValidInput(){
         let inputsHour = document.querySelectorAll(".hourInput")
         for (let i = 0; i < inputsHour.length; i++) {
@@ -135,7 +110,21 @@ class createModalEditTime{
         }
         this.displayNotifForDuration()  
     }
-    
+
+    inputHandlerHour(e){
+        let validat = document.querySelector(".validation")
+        if (+e.target.value>=24) {
+            validat.style.display="block"
+        }else{
+            validat.style.display="none"
+        }
+        this.displayNotifForDuration()
+    }
+
+    inputHandlerMiliSecond(){
+        this.displayNotifForDuration()
+    }
+
     checkingDuretion(){
         let hourInputStart = document.querySelector("#hourFormStart").value
         let minetsInputStart = document.querySelector("#minutsFormStart").value
@@ -152,7 +141,6 @@ class createModalEditTime{
         return duration==durationInTimeLine
     }
 
-
     displayNotifForDuration(){
         let notifDuration = document.querySelector(".duration")
         if(!this.checkingDuretion()){
@@ -162,42 +150,6 @@ class createModalEditTime{
         }
     }
 
-
-    inputHandlerHour(e){
-        let validat = document.querySelector(".validation")
-        if (+e.target.value>=24) {
-            validat.style.display="block"
-        }else{
-            validat.style.display="none"
-        }
-        this.displayNotifForDuration()
-    }
-
-    inputHandlerMiliSecond(){
-        this.displayNotifForDuration()
-    }
-
-    startTimeEdit(){
-        let hourInput = document.querySelector("#hourFormStart").value
-        let minetsInput = document.querySelector("#minutsFormStart").value
-        let seccondInput = document.querySelector("#secondFormStart").value
-        let miliseccondInput = document.querySelector("#miliSecondFormStart").value
-        let timeStart = (hourInput*3600000)+(minetsInput*60000)+(seccondInput*1000)+(+miliseccondInput)
-        return timeStart
-    }
-    endTimeEdit(){
-        let hourInput = document.querySelector("#hourFormEnd").value
-        let minetsInput = document.querySelector("#minutsFormEnd").value
-        let seccondInput = document.querySelector("#secondFormEnd").value
-        let miliseccondInput = document.querySelector("#miliSecondFormEnd").value
-        let timeEnd = (hourInput*3600000)+(minetsInput*60000)+(seccondInput*1000)+(+miliseccondInput)
-        return timeEnd
-    }
-
-    validation(){
-        // let validat = document.querySelector(".validation")
-        // hourInput.addEventListener("input",this.validateHandler)
-    }
 
     enterEditation(){
         let hourInputStart = document.querySelector("#hourFormStart").value*3600000
@@ -219,7 +171,5 @@ class createModalEditTime{
             return {start:start,end:end,id:this.id}
         }
     }
-
-
 }
-export default createModalEditTime
+export default timespan
