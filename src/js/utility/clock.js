@@ -26,3 +26,14 @@ export function updateTimeInTimeLine(item,type) {
   let result = +(hh + mm + ss);
   return result
 }
+
+
+export function hhmmssValue(time) {
+  let DataForm = new Date(time).toUTCString()
+  let timeFormathhmmss = DataForm.slice(17,26).split(":")
+  let Hour=timeFormathhmmss[0]
+  let Minutes = timeFormathhmmss[1]
+  let Seccond = timeFormathhmmss[2]
+  let MiliSeccond = "00"
+  return {Hour,Minutes,Seccond,MiliSeccond}
+}

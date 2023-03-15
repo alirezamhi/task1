@@ -1,21 +1,15 @@
-import localStoragefunction from "../../localStoragefunction";
-import { changeMiliSecondTohhmmss , creatDataForm } from "../../utility/clock";
+import { changeMiliSecondTohhmmss, creatDataForm } from "../../utility/clock";
 
 const dictionary = {
   name: "نام",
   duration: "مدت زمان",
   start: "شروع",
   end: "پایان",
-  content:"نام"
+  content: "نام",
 };
 class Table {
-  constructor(itemInTimeLine, allDataInDataBase, timeLine) {
-    this.itemInTimeLine = itemInTimeLine;
-    this.allDataInDataBase = allDataInDataBase;
-    this.timeLine = timeLine;
-  }
   createTableTemplate(option) {
-    if(option.col.length){
+    if (option.col.length) {
       return `<table class="table ${option.eleId}">
       <thead>
       <tr>
@@ -33,7 +27,7 @@ class Table {
           <tbody id=${option.eleId}></tbody>
       </table>`;
     }
-    return ""
+    return "";
   }
 
   createButtonPagination(items) {
@@ -47,19 +41,24 @@ class Table {
     }
   }
 
-  createRow(list,itemInTimeLine) {
+  createRow(list, itemInTimeLine) {
     return list.col.map((item) => {
-      const { name, id, duration ,start, end , content } = item;
-      let durationTime = list.eleId === "programItemConfig" ? changeMiliSecondTohhmmss(duration):"";
-      let startTime = creatDataForm(start)
-      let endTime = creatDataForm(end)
+      const { name, id, duration, start, end, content } = item;
+      let durationTime =
+        list.eleId === "programItemConfig"
+          ? changeMiliSecondTohhmmss(duration)
+          : "";
+      let startTime = creatDataForm(start);
+      let endTime = creatDataForm(end);
       let isItemInTimeLine = itemInTimeLine?.find((node) => node.id == id);
       let style = isItemInTimeLine
         ? "visibility :hidden;"
         : "visibility :visible;";
       return `<tr>
                 <td>${id}</td>
-                ${list.eleId =="programItemConfig"?`
+                ${
+                  list.eleId == "programItemConfig"
+                    ? `
                     <td>${name}</td>
                     <td>${durationTime}</td>
                     <td>
@@ -70,7 +69,8 @@ class Table {
                           </svg></button>
                       </div>
                     </td>
-                    `:`
+                    `
+                    : `
                     <td>${content}</td>
                     <td>${startTime}</td>
                     <td>${endTime}</td>
@@ -80,30 +80,10 @@ class Table {
                         <button class="btn btn-danger deleteButtonInTable" id="deleteButtonInTable${id}" data-id="${id}" data-bs-toggle="modal" data-bs-target="#exampleModal3">حذف</button>
                       </div>
                     </td>
-                    `}
+                    `
+                }
             </tr>`;
     });
   }
- addRowInTable(list) {
-    let itemInTimeLine = localStoragefunction.getItem();
-    let tbody = document.querySelector("tbody");
-    let tableTamplate = this.rowTemplate(list, itemInTimeLine);
-    for (let i = 0; i < tableTamplate.length; i++) {
-      tbody.innerHTML += tableTamplate[i];
-    }
-    const addButtons = document.querySelectorAll(".addButton");
-    for (let i = 0; i < addButtons.length; i++) {
-      addButtons[i].removeEventListener("click", this.buttonAddTimelineHandler);
-      addButtons[i].addEventListener("click", this.buttonAddTimelineHandler);
-    }
-  }
-
-  // addButtonInTimeLineAndTable(data) {
-  //   // this.allDataInDataBase = data;
-  //   let buttons = document.querySelectorAll(".addButtonInTimeLine");
-  //   for (let i = 0; i < buttons.length; i++) {
-  //     buttons[i].addEventListener("click",()=>console.log("alireza"))
-  //   }
-  // }
 }
 export default Table;

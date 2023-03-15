@@ -20,6 +20,7 @@ class index {
     this.itemInTimeLine = getItem() ? getItem() : [];
     this.timeLine;
     this.timespan = new timespan(this.itemInTimeLine)
+    this.myTimeLine 
     this.table = new table(
       this.itemInTimeLine,
       this.allDataInDataBase,
@@ -27,6 +28,7 @@ class index {
     );
     this.allDataInDataBase;
   }
+
   //start when start project it get data from backend and use method to create modalItem 
   getData() {
     fetch("https://63e8d426b120461c6be64cdd.mockapi.io/timeline/items", {
@@ -36,7 +38,7 @@ class index {
       .then((res) => res.json())
       .then((data) => {
         this.allDataInDataBase = data;
-        programItemConfig.col=data
+        programItemConfig.col = data
         this.addTableInModal()
         this.table.createButtonPagination(data);
         this.setAddButtonInTimeLineAndTable(data);
@@ -77,13 +79,13 @@ class index {
     this.modal.createTypeOfModalAndAddToDom(1, "افزودن به برنامه", "pagin");
     this.modal.createTypeOfModalAndAddToDom(2, "نمایش فیلم", "film");
     this.modal.createTypeOfModalAndAddToDom(3,"حذف ایتم","deleteItem");
-    this.modal.createTypeOfModalAndAddToDom(4,"ویرایش","editItem");
+    this.modal.createTypeOfModalAndAddToDom(4,"ویرایش","edit");
   }
   //end create all modals
 
   createTimeLine() {
     let timeLineArea = document.createElement("div");
-    let myTimeLine = new timeLine(this.itemInTimeLine, timeLineArea);
+    let myTimeLine = new timeLine(this.itemInTimeLine , timeLineArea);
     this.timeLine = myTimeLine.generateTimeLine();
     this.app.appendChild(timeLineArea);
   }
@@ -100,9 +102,6 @@ class index {
     }
   }
   //end to create table in modal for show item to add 
-
-
-
 
   //start event addButton to timeLine and Table
   setAddButtonInTimeLineAndTable() {
@@ -139,7 +138,8 @@ class index {
 
     let a = document.querySelector(".itemInTimeLineTable")?document.querySelector(".itemInTimeLineTable").remove() :"a"
     this.createTableForShowItem()
-
+    this.setDeleteEvent()
+    this.setEditButton()
     setitem(this.itemInTimeLine);
   }
   //end event addButton to timeLine and Table
@@ -156,18 +156,7 @@ class index {
   editableCancleHandler(){
     document.querySelector("#editAble").style.display="block"
     document.querySelector("#editAbleCancle").style.display="none"
-    this.timeLine.setOptions({
-      editable: {
-        add:false,
-        updateTime: false,
-        updateGroup: false,
-        overrideItems: false,
-        remove: false,
-      },
-      onRemove:(item,callback)=>{
-        callback(null)
-      }
-    })
+    this.timeLine.cancleEditAbleEvent()
   }
   editableHandler(e){
     document.querySelector("#editAble").style.display="none"
@@ -187,13 +176,17 @@ class index {
         self.itemInTimeLine = self.itemInTimeLine.filter(
           (node) => node.id !== item.id
         );
-        document.querySelector(".itemInTimeLineTable").remove()
-        self.createTableForShowItem()
+        // document.querySelector(".itemInTimeLineTable").remove()
+        // self.createTableForShowItem()
         // document.querySelector(".tbodyForShowItem").innerHTML = "";
         // tableShowItem.createRowTable(self.itemInTimeLine);
         // self.deleteButtonInTable();
         // self.editButtonInTable()
+        document.querySelector(".itemInTimeLineTable").remove()
+        self.createTableForShowItem()
         setitem(self.itemInTimeLine);
+        self.setDeleteEvent()
+        self.setEditButton()
         callback(item);
       },
       onMoving: (item, callback) => {
@@ -222,7 +215,8 @@ class index {
             setitem(this.itemInTimeLine)
             document.querySelector(".itemInTimeLineTable").remove()
             self.createTableForShowItem()
-
+            self.setDeleteEvent()
+            self.setEditButton()
             // tableShowItem.createRowTable(this.itemInTimeLine);
             // this.deleteButtonInTable();
             // this.editButtonInTable();
@@ -284,6 +278,21 @@ class index {
   }
   editButtonTable(e){
     this.timespan.findNodeForSetTimeInInput(e.target)
+    let template = this.timespan.createTemplate()
+    let modal = document.querySelector("#modalBody4")
+    modal.innerHTML=template
+    this.timespan.setValidInput()
+    let enterEditButton = document.querySelector("#addEditButton")
+    enterEditButton.addEventListener("click",()=>{
+      let newTimeByEdit = this.timespan.enterEditation()
+      let findForEnterEdit =  this.itemInTimeLine.find(node=>node.id==e.target.dataset.id)
+      findForEnterEdit.start = newTimeByEdit.start
+      findForEnterEdit.end = newTimeByEdit.end
+      document.querySelector(".itemInTimeLineTable").remove()
+      this.createTableForShowItem()
+      this.timeLine.setItems(this.itemInTimeLine)
+      setitem(this.itemInTimeLine)
+    })
   }
   //end add timespan in modal 
 }

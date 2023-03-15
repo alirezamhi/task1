@@ -24,7 +24,8 @@ class timeLine {
 
   generateTimeLine() {
     var items = new DataSet(this.dataTime);
-    return new Timeline(this.element, items, this.options);
+    this.timeline = new Timeline(this.element, items, this.options);
+    return this.timeline;
   }
 }
 
